@@ -5,14 +5,12 @@ import html
 from urllib.parse import quote
 import math
 
-# Настройки страницы
 st.set_page_config(
     page_title="LIFE FINDER",
     page_icon="🪐",
     layout="wide"
 )
 
-# Параметры оценки — прежние
 DATA_FILE = "PSCompPars_2026.11.13_09.22.26.csv"
 
 MIN_TEMPERATURE = 200
@@ -22,14 +20,14 @@ MAX_RADIUS = 1.5
 MIN_MASS = 0.5
 MAX_MASS = 5.0
 
-# Космический дизайн с новой заставкой
+# ОФОРМЛЕНИЕ САЙТА
 st.markdown("""
 <style>
 .stApp {
     background-image:
         linear-gradient(
-            rgba(4, 8, 25, 0.58),
-            rgba(4, 8, 25, 0.68)
+            rgba(4, 8, 25, 0.55),
+            rgba(4, 8, 25, 0.65)
         ),
         url("https://raw.githubusercontent.com/mayskk/life-finder/main/F246F421-584D-490A-9C23-A04F056FF6C9.PNG");
 
@@ -40,37 +38,84 @@ st.markdown("""
     color: white;
 }
 
-h1, h2, h3, p, label {
+/* Заголовки */
+h1 {
     color: white !important;
+    font-size: 46px !important;
+    font-weight: 800 !important;
 }
 
-.stAlert p {
-    color: #10243A !important;
+h2 {
+    color: white !important;
+    font-size: 34px !important;
+    font-weight: 700 !important;
 }
 
+h3 {
+    color: white !important;
+    font-size: 27px !important;
+    font-weight: 700 !important;
+}
+
+/* Основной текст */
+p, label, .stMarkdown, .stCaption {
+    color: white !important;
+    font-size: 19px !important;
+}
+
+/* Поле поиска */
 .stTextInput input {
     background-color: white;
-    color: #10243A;
+    color: #172033;
     border-radius: 10px;
+    font-size: 18px;
+    padding: 12px;
 }
 
+/* ФИОЛЕТОВАЯ КНОПКА */
 .stButton button {
-    background-color: #1688D4;
-    color: white;
-    border-radius: 10px;
-    border: none;
-    padding: 10px 25px;
+    background: linear-gradient(135deg, #8B35D6, #6420A8);
+    color: white !important;
+    border-radius: 12px;
+    border: 1px solid #B77AFF;
+    padding: 12px 28px;
+    font-size: 19px;
+    font-weight: 700;
+    transition: 0.2s;
 }
 
 .stButton button:hover {
-    background-color: #0869AD;
-    color: white;
+    background: linear-gradient(135deg, #A64DFF, #792BD1);
+    color: white !important;
+    border: 1px solid #D8B5FF;
 }
 
+/* Вкладки */
+.stTabs [data-baseweb="tab"] {
+    font-size: 19px;
+    font-weight: 700;
+}
+
+/* Карточки и уведомления */
+.stMetric {
+    background-color: rgba(20, 25, 55, 0.65);
+    padding: 15px;
+    border-radius: 12px;
+}
+
+.stAlert p {
+    font-size: 18px !important;
+    color: inherit !important;
+}
+
+/* Ссылки каталога */
+a {
+    font-size: 18px;
+}
 </style>
 """, unsafe_allow_html=True)
 
-# Загрузка прежней базы NASA
+
 @st.cache_data
 def load_data():
     planets = pd.read_csv(
@@ -89,6 +134,7 @@ def load_data():
         ]
     ]
 
+
 try:
     planets = load_data()
 except Exception:
@@ -99,7 +145,7 @@ except Exception:
     )
     st.stop()
 
-# Заголовок сайта
+
 st.title("🪐 LIFE FINDER")
 
 st.markdown(
@@ -111,14 +157,15 @@ st.markdown(
 
 st.markdown("---")
 
-# Три вкладки сайта
+
 tab_check, tab_catalog, tab_about = st.tabs([
     "🔍 Проверка планеты",
     "🪐 Каталог экзопланет",
     "ℹ️ О программе"
 ])
 
-# ВКЛАДКА 1. ПРОВЕРКА ПЛАНЕТЫ
+
+# ВКЛАДКА 1 — ПРОВЕРКА ПЛАНЕТЫ
 with tab_check:
 
     st.markdown(
@@ -136,6 +183,7 @@ with tab_check:
     )
 
     st.write("")
+
     planet_name = st.text_input(
         "Введите название экзопланеты:",
         placeholder="Например, TRAPPIST-1 e"
@@ -177,6 +225,7 @@ with tab_check:
                         f"{radius} радиуса Земли"
                         if pd.notna(radius) else "Нет данных"
                     )
+
                     st.metric(
                         "Температура",
                         f"{temperature} K"
@@ -189,13 +238,13 @@ with tab_check:
                         f"{mass} массы Земли"
                         if pd.notna(mass) else "Нет данных"
                     )
+
                     st.metric(
                         "Расстояние до звезды",
                         f"{distance} а.е."
                         if pd.notna(distance) else "Нет данных"
                     )
 
-                # Оценка пригодности
                 st.markdown("---")
                 st.subheader("Результат анализа")
 
@@ -216,9 +265,13 @@ with tab_check:
                     )
 
                     if suitable:
-                        st.success("🟢 ПРИГОДНА ДЛЯ ЖИЗНИ")
+                        st.success(
+                            "🟢 ПРИГОДНА ДЛЯ ЖИЗНИ"
+                        )
                     else:
-                        st.error("🔴 НЕПРИГОДНА ДЛЯ ЖИЗНИ")
+                        st.error(
+                            "🔴 НЕПРИГОДНА ДЛЯ ЖИЗНИ"
+                        )
 
                 st.caption(
                     "Это предварительная оценка по выбранным "
@@ -227,7 +280,8 @@ with tab_check:
                     "температуре поверхности."
                 )
 
-# ВКЛАДКА 2. КАТАЛОГ ЭКЗОПЛАНЕТ
+
+# ВКЛАДКА 2 — КАТАЛОГ
 with tab_catalog:
 
     st.subheader("🪐 Каталог экзопланет")
@@ -237,7 +291,6 @@ with tab_catalog:
         "о ней в NASA Exoplanet Archive."
     )
 
-    # Берём названия только из нашего прежнего CSV
     planet_names = sorted(
         {
             str(name).strip()
@@ -247,7 +300,6 @@ with tab_catalog:
         key=str.casefold
     )
 
-    # Поиск по каталогу
     search_name = st.text_input(
         "Найти планету в каталоге:",
         placeholder="Начни вводить название..."
@@ -263,8 +315,8 @@ with tab_catalog:
 
     st.write(f"Найдено планет: {len(filtered_names)}")
 
-    # Разбиваем большой каталог на страницы
     PAGE_SIZE = 50
+
     total_pages = max(
         1,
         math.ceil(len(filtered_names) / PAGE_SIZE)
@@ -281,9 +333,9 @@ with tab_catalog:
 
     start_index = (page - 1) * PAGE_SIZE
     end_index = start_index + PAGE_SIZE
+
     visible_names = filtered_names[start_index:end_index]
 
-    # Каждое название — отдельная ссылка на NASA
     for name in visible_names:
 
         encoded_name = quote(name, safe="")
@@ -298,7 +350,7 @@ with tab_catalog:
         st.markdown(
             f'<p style="margin: 8px 0;">'
             f'<a href="{nasa_url}" target="_blank" '
-            f'style="color:#62C5FF; font-size:17px; '
+            f'style="color:#C99AFF; font-size:19px; '
             f'text-decoration:underline;">'
             f'{safe_name} ↗'
             f'</a></p>',
@@ -306,9 +358,12 @@ with tab_catalog:
         )
 
     if not filtered_names:
-        st.info("Планета с таким названием не найдена.")
+        st.info(
+            "Планета с таким названием не найдена."
+        )
 
-# ВКЛАДКА 3. О ПРОГРАММЕ
+
+# ВКЛАДКА 3 — О ПРОГРАММЕ
 with tab_about:
 
     st.subheader("ℹ️ О программе LIFE FINDER")
@@ -340,7 +395,8 @@ with tab_about:
         "не доказывает существование жизни на планете."
     )
 
-# Нижняя часть сайта
+
+# НИЖНЯЯ ЧАСТЬ САЙТА
 st.markdown("---")
 
 st.markdown(
