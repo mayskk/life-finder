@@ -12,7 +12,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# Параметры оценки — оставляем прежними
+# Параметры оценки — прежние
 DATA_FILE = "PSCompPars_2026.11.13_09.22.26.csv"
 
 MIN_TEMPERATURE = 200
@@ -22,11 +22,21 @@ MAX_RADIUS = 1.5
 MIN_MASS = 0.5
 MAX_MASS = 5.0
 
-# Космический дизайн
+# Космический дизайн с новой заставкой
 st.markdown("""
 <style>
 .stApp {
-    background: linear-gradient(135deg, #07182D, #102C4C, #07182D);
+    background-image:
+        linear-gradient(
+            rgba(4, 8, 25, 0.58),
+            rgba(4, 8, 25, 0.68)
+        ),
+        url("https://raw.githubusercontent.com/mayskk/life-finder/main/F246F421-584D-490A-9C23-A04F056FF6C9.PNG");
+
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     color: white;
 }
 
@@ -56,9 +66,9 @@ h1, h2, h3, p, label {
     background-color: #0869AD;
     color: white;
 }
+
 </style>
 """, unsafe_allow_html=True)
-
 
 # Загрузка прежней базы NASA
 @st.cache_data
@@ -79,7 +89,6 @@ def load_data():
         ]
     ]
 
-
 try:
     planets = load_data()
 except Exception:
@@ -89,7 +98,6 @@ except Exception:
         "в одной папке с app.py."
     )
     st.stop()
-
 
 # Заголовок сайта
 st.title("🪐 LIFE FINDER")
@@ -103,14 +111,12 @@ st.markdown(
 
 st.markdown("---")
 
-
 # Три вкладки сайта
 tab_check, tab_catalog, tab_about = st.tabs([
     "🔍 Проверка планеты",
     "🪐 Каталог экзопланет",
     "ℹ️ О программе"
 ])
-
 
 # ВКЛАДКА 1. ПРОВЕРКА ПЛАНЕТЫ
 with tab_check:
@@ -130,7 +136,6 @@ with tab_check:
     )
 
     st.write("")
-
     planet_name = st.text_input(
         "Введите название экзопланеты:",
         placeholder="Например, TRAPPIST-1 e"
@@ -162,7 +167,6 @@ with tab_check:
 
                 st.markdown("---")
                 st.subheader(f"🪐 {planet['pl_name']}")
-
                 st.markdown("### Характеристики планеты")
 
                 col1, col2 = st.columns(2)
@@ -173,7 +177,6 @@ with tab_check:
                         f"{radius} радиуса Земли"
                         if pd.notna(radius) else "Нет данных"
                     )
-
                     st.metric(
                         "Температура",
                         f"{temperature} K"
@@ -186,7 +189,6 @@ with tab_check:
                         f"{mass} массы Земли"
                         if pd.notna(mass) else "Нет данных"
                     )
-
                     st.metric(
                         "Расстояние до звезды",
                         f"{distance} а.е."
@@ -224,7 +226,6 @@ with tab_check:
                     "Равновесная температура не равна измеренной "
                     "температуре поверхности."
                 )
-
 
 # ВКЛАДКА 2. КАТАЛОГ ЭКЗОПЛАНЕТ
 with tab_catalog:
@@ -280,7 +281,6 @@ with tab_catalog:
 
     start_index = (page - 1) * PAGE_SIZE
     end_index = start_index + PAGE_SIZE
-
     visible_names = filtered_names[start_index:end_index]
 
     # Каждое название — отдельная ссылка на NASA
@@ -307,7 +307,6 @@ with tab_catalog:
 
     if not filtered_names:
         st.info("Планета с таким названием не найдена.")
-
 
 # ВКЛАДКА 3. О ПРОГРАММЕ
 with tab_about:
@@ -340,7 +339,6 @@ with tab_about:
         "Важно: предварительная оценка LIFE FINDER "
         "не доказывает существование жизни на планете."
     )
-
 
 # Нижняя часть сайта
 st.markdown("---")
